@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body>
+<form  method="post">
+
+    <input type="hidden" th:value="${user.getId()}" readonly>
+<label>Name</label>
+    <input type="text" name="Name" value="" th:value="${user.getName()}"   />
+<label>Profession</label>
+    <input type="text" name ="Profession" value="" th:value="${user.getProfession()}" />
+<label>Age</label>
+    <input type="number" name = "Age" value="" th:value="${user.getAge()}"/>
+    <input type="submit" value="Edit user">
+</form>
