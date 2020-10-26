@@ -5,7 +5,7 @@ import web.model.User;
 
 import java.util.List;
 
-public interface UserService extends UserDetailsService {
+public interface UserService  {
 
     public void add(User user);
 

@@ -12,10 +12,15 @@ import web.service.UserService;
 @RequestMapping("/admin/**")
 public class AdminController {
     private UserService userService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+    @Autowired
+    public void setbCryptPasswordEncoder(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @GetMapping("/")

@@ -15,18 +15,10 @@ public class UserDaoImp implements UserDao {
    @PersistenceContext
    private EntityManager entityManager;
 
-  // public EntityManager getEntityManager() {
-     // return entityManager;
-   //}
-  // @Autowired
-  // public void setEntityManager(EntityManager entityManager) {
-     // this.entityManager = entityManager;
-  // }
-   
    @Override
    public User getUserByLogin(String login) {
-     return (User) entityManager.createQuery("from Users where login =:login")
-              .setParameter("longID", login)
+     return (User) entityManager.createQuery("from User where login =:login")
+              .setParameter("login", login)
               .getSingleResult();
    }
     
@@ -38,13 +30,13 @@ public class UserDaoImp implements UserDao {
    @Override
    @SuppressWarnings("unchecked")
    public List<User> listUsers() {
-     return entityManager.createQuery (" from Users ", User.class).getResultList ();
+     return entityManager.createQuery (" from User ", User.class).getResultList ();
 
    }
     
    @Override
    public void delete(User user) {
-     entityManager.remove (entityManager.createQuery(" from Users id where id =:id")
+     entityManager.remove (entityManager.createQuery(" from User where id =:id")
               .setParameter("id", user.getId ())
               .getSingleResult());
 
@@ -52,7 +44,7 @@ public class UserDaoImp implements UserDao {
     
    @Override
    public void deleteById(Long id) {
-      entityManager.remove(entityManager.createQuery("from Users where id =:id")
+      entityManager.remove(entityManager.createQuery("from User where id =:id")
               .setParameter("id", id)
               .getSingleResult());
    }
@@ -64,7 +56,7 @@ public class UserDaoImp implements UserDao {
    
    @Override
    public User getUserById(Long id) {
-      return (User) entityManager.createQuery("from Users where id =:longID")
+      return (User) entityManager.createQuery("from User where id =:longID")
               .setParameter("longID", id)
               .getSingleResult();
    }
@@ -72,7 +64,7 @@ public class UserDaoImp implements UserDao {
    @Override
    public boolean tableIsEmpty() {
       try {
-         entityManager.createQuery ("select 1 from users")
+         entityManager.createQuery ("select 1 from user")
                  .getResultList ()
                  .isEmpty ();
       }catch (java.lang.NullPointerException e){
@@ -83,7 +75,7 @@ public class UserDaoImp implements UserDao {
    
    @Override
    public User getUserByName(String name) {
-      return (User) entityManager.createQuery("from Users where name =:name")
+      return (User) entityManager.createQuery("from User where userName =:name")
               .setParameter("name", name)
               .getSingleResult();
    }

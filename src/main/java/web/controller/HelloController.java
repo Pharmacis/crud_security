@@ -1,6 +1,7 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,6 @@ import java.util.HashSet;
 @Controller
 
 public class HelloController {
-
     private UserService userService;
 
     @Autowired
@@ -25,7 +25,6 @@ public class HelloController {
 
     @GetMapping("/")
     public String getUsers(){
-
         return "startPage";
     }
 
@@ -34,9 +33,12 @@ public class HelloController {
         return "accessDenied";
     }
     @GetMapping("/user")
-    public String getUser(@ModelAttribute("user") User user,Model model){
-        model.addAttribute ("list_users",userService.listUsers ());
-        return "user";
+    public String getUser(Model model){
+        model.addAttribute("user", (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal());
+        return "userPage";
     }
 
 

@@ -30,6 +30,8 @@ public class UserServiceImp implements UserService {
 
     */
 
+
+
     @Autowired
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
@@ -104,9 +106,4 @@ public class UserServiceImp implements UserService {
         public User getUserById (Long id){
             return userDao.getUserById (id);
         }
-
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userDao.getUserByLogin (s);
-    }
 }
