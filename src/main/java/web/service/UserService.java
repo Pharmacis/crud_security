@@ -20,4 +20,8 @@ public interface UserService  {
 
     public User getUserById(Long id);
 
+    public void addListOfRolesForUser(User user, List<String> rolesValues);
+
+    public List <String> getRoles();
+
 }

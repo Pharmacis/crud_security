@@ -5,8 +5,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import web.model.User;
 import web.service.UserService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/**")
@@ -38,29 +41,26 @@ public class AdminController {
     @PostMapping("/edit/{id}")
     public String editUser (@ModelAttribute("user") User user){
         userService.update (user);
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
     @GetMapping("/add")
-    public String getAddForm(){
+    public String getAddForm(Model model){
+        model.addAttribute("ROLES", userService.getRoles ());
         return "add";
     }
 
     @PostMapping ("/add")
-    public String addUser(@ModelAttribute("user") User user){
+    public String addUser (Model model,@ModelAttribute("user") User user,@RequestParam List<String> rolesValues) {
         userService.add (user);
-        return "redirect:/";
+        userService.addListOfRolesForUser (user, rolesValues);
+        model.addAttribute ("ROLES", userService.getRoles ());
+        return "redirect:/admin";
     }
 
     @GetMapping("/delete/{id}")
-    public String getDeleteForm (@PathVariable ("id") Long id,Model model){
-        model.addAttribute ("user",userService.getUserById (id));
-        return "edit";
-    }
-    @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable ("id") Long id,Model model){
+    public String getDeleteForm (@PathVariable ("id") Long id){
         userService.deleteById (id);
-        return "redirect:/";
-    }
-
+        return "redirect:/admin";
+   }
 }

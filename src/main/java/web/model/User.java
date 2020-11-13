@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table
 public class User implements UserDetails {
 
     @Id
@@ -32,18 +32,21 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles = new HashSet<Role>() ;
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST,CascadeType.DETACH, CascadeType.MERGE,CascadeType.REFRESH})
+    private Set<Role> roles= new HashSet<> ();
+
 
     public User() {
     }
 
-    public User( Long id,String login,String userName,String profession,int age, String password) {
+    public User( Long id,String login,String userName,String profession,int age, String password,Set<Role> roles) {
         this.id= id;
         this.login = login;
         this.userName = userName;
         this.profession = profession;
         this.age = age;
+        this.roles =roles;
         this.password = password;
 
     }

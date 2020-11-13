@@ -6,11 +6,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import web.service.UserDetailsServiceImpl;
+
+import javax.activation.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -19,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetails; // сервис, с помощью которого тащим пользователя
     private final SuccessUserHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
     //@EnableAspectJAutoProxy(proxyTargetClass=true)
-    public SecurityConfig(UserDetailsServiceImpl userDetails, SuccessUserHandler successUserHandler) {
+    public SecurityConfig( UserDetailsServiceImpl userDetails, SuccessUserHandler successUserHandler) {
         this.userDetails = userDetails;
         this.successUserHandler = successUserHandler;
     }
@@ -34,11 +35,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
+        //auth.userDetailsService (userDetails);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests ().antMatchers ("/").permitAll ();
         http.formLogin ()
+               // .loginProcessingUrl("/autenticateTheUser")//.loginProcessingUrl("/autenticateTheUser")//
                 .successHandler (successUserHandler)
                 .permitAll ();
         http.logout ()//URL выхода из системы безопасности Spring - только POST. Вы можете поддержать выход из системы без POST, изменив конфигурацию Java
@@ -52,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").anonymous()
                 // защищенные URL
-                .antMatchers("/user").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/user").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
                 .anyRequest().authenticated()
                 .and().formLogin()// Spring сам подставит свою логин форму
                 .successHandler(successUserHandler);

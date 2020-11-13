@@ -15,6 +15,8 @@
         <th>name</th>
         <th>profession</th>
         <th>age</th>
+        <th>login</th>
+        <th>roles</th>
         <th>link</th>
     </tr>
     <tr>
@@ -42,6 +44,18 @@
         </td>
         <td>
             <th:block th:each="lu : ${list_users}">
+                <p th:text="${lu.getLogin()}"></p>
+            </th:block>
+        </td>
+        <td>
+            <th:block th:each="lu : ${list_users}">
+                <th:block th:each="role : ${lu.getRoles()}">
+                    <p th:text ="${role.getRole()}"></p>
+                </th:block>
+            </th:block>
+        </td>
+        <td>
+            <th:block th:each="lu : ${list_users}">
        <a th:href= "@{/admin/edit/{id}(id=${lu.getId()})}">edit</a>
         <a th:href = "@{/admin/delete/{id}(id=${lu.getId()})}">delete</a>
                 <p></p>
@@ -52,5 +66,8 @@
 
 <h1>Add</h1>
 <a th:href="@{/admin/add}">Add new user</a>
+<form th:align="left" th:action="@{/logout}" method="get">
+    <input type="submit" value="Sign Out"/>
+</form>
 </body>
 </html>

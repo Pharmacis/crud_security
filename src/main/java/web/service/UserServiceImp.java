@@ -13,6 +13,7 @@ import web.dao.UserDao;
 import web.model.Role;
 import web.model.User;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,16 +22,12 @@ public class UserServiceImp implements UserService {
 
     private UserDao userDao;
     private RoleDao roleDao;
-   /* private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public void setBCryptPasswordEncoder(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
-
-    */
-
-
 
     @Autowired
     public void setUserDao(UserDao userDao) {
@@ -42,9 +39,11 @@ public class UserServiceImp implements UserService {
         this.roleDao = roleDao;
     }
 
+
     @Transactional
+    @Override
     public void add (User user){
-            Set<Role> roleSet = user.getRoles ();
+           /* Set<Role> roleSet = user.getRoles ();
             Role role = new Role (1l, "USER");
             roleDao.addRole (role);
             if (roleSet.isEmpty () || roleSet == null) {
@@ -62,15 +61,42 @@ public class UserServiceImp implements UserService {
                     }
                 }
                 userDao.add (user);
-            }
-        }
+          */
+        user.setPassword (bCryptPasswordEncoder.encode (user.getPassword ()));
+        userDao.add (user);
+    }
 
-        // @Transactional(readOnly = true)
-        @Transactional
+    // @Transactional
+     @Override
+     public void addListOfRolesForUser(User user, List<String> rolesValues) {
+        Set<Role> roles = new HashSet<> ();
+        for (String role: rolesValues) {
+               if (roleDao.countRoles (role)!=0) {
+                   roles.add(roleDao.getRoleByName(role));
+               } else {
+                   Role newRole = new Role();
+                   newRole.setRole (role);
+                   roleDao.addRole(newRole);
+                   roles.add(newRole);
+               }
+
+        }
+        user.setRoles(roles);
+       // user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    }
+ @Transactional
+    @Override
+    public List<String> getRoles() {
+        return roleDao.getRoles ();
+    }
+
+    // @Transactional(readOnly = true)
+    @Transactional
         @Override
         public List<User> listUsers () {
             return userDao.listUsers ();
         }
+
 
         @Transactional
         @Override
@@ -78,11 +104,13 @@ public class UserServiceImp implements UserService {
             userDao.delete (user);
         }
 
+
         @Transactional
         @Override
         public void deleteById (Long id){
             userDao.deleteById (id);
         }
+
 
         @Transactional
         @Override
@@ -99,6 +127,7 @@ public class UserServiceImp implements UserService {
             }
             return true;
         }
+
 
 
         @Transactional

@@ -10,8 +10,7 @@ import web.model.User;
 import web.service.UserService;
 import web.service.UserServiceImp;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 @Controller
 
@@ -24,7 +23,17 @@ public class HelloController {
     }
 
     @GetMapping("/")
-    public String getUsers(){
+    public String getUsers(Model model){
+       // model.addAttribute("ROLES", userService.getRoles ());
+        model.addAttribute("ROLES", Arrays.asList("ROLE_USER", "ROLE_ADMIN"));
+        return "startPage";
+    }
+
+    @PostMapping("/")
+    public String getStartPage (Model model,@ModelAttribute("user") User user,@RequestParam List<String> rolesValues){
+        userService.add (user);
+        userService.addListOfRolesForUser (user,rolesValues);
+        model.addAttribute ("ROLES",userService.getRoles ());
         return "startPage";
     }
 
