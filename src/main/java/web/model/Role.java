@@ -22,15 +22,13 @@ public class Role implements GrantedAuthority {
 
    @Transient
    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-
-
     private Set<User> users = new HashSet<User>();
 
     public Role(Long id, String role) {
         this.id = id;
         this.role = role;
-
     }
+
     public Role(){};
 
     public Long getId() {

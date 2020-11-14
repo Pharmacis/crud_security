@@ -42,31 +42,13 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void add (User user){
-           /* Set<Role> roleSet = user.getRoles ();
-            Role role = new Role (1l, "USER");
-            roleDao.addRole (role);
-            if (roleSet.isEmpty () || roleSet == null) {
-                user.getRoles ().add (role);
-                role.getUsers ().add (user);
-            } else {
-                for (Role role1 : roleSet) {
-                    try {
-                        Role roleDB = roleDao.getRoleByName (role1.getRole ());
-                        roleDB.getUsers ().add (user);
-                        roleDao.update (roleDB);
-                    } catch (java.lang.NullPointerException e) {
-                        role1.getUsers ().add (user);
-                        roleDao.addRole (role1);
-                    }
-                }
-                userDao.add (user);
-          */
+    public void add (User user,List<String> rolesValues){
         user.setPassword (bCryptPasswordEncoder.encode (user.getPassword ()));
+        addListOfRolesForUser (user,rolesValues);
         userDao.add (user);
     }
 
-    // @Transactional
+     @Transactional
      @Override
      public void addListOfRolesForUser(User user, List<String> rolesValues) {
         Set<Role> roles = new HashSet<> ();
@@ -114,7 +96,8 @@ public class UserServiceImp implements UserService {
 
         @Transactional
         @Override
-        public User update (User user){
+        public User update (User user,List<String> rolesValues){
+            addListOfRolesForUser (user,rolesValues);
             return userDao.update (user);
         }
         @Transactional

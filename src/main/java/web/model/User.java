@@ -36,7 +36,6 @@ public class User implements UserDetails {
             cascade = {CascadeType.PERSIST,CascadeType.DETACH, CascadeType.MERGE,CascadeType.REFRESH})
     private Set<Role> roles= new HashSet<> ();
 
-
     public User() {
     }
 

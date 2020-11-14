@@ -70,14 +70,9 @@ public class UserDaoImp implements UserDao {
    @Transactional
    @Override
    public boolean tableIsEmpty() {
-      try {
-         entityManager.createQuery ("select 1 from user")
+        return entityManager.createQuery ("select 1 from user")
                  .getResultList ()
                  .isEmpty ();
-      }catch (java.lang.NullPointerException e){
-         return true;
-      }
-        return false;
    }
 
    @Transactional

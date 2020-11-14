@@ -16,33 +16,23 @@ import javax.activation.DataSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-   // private final DataSource dataSource;
     private final UserDetailsService userDetails; // сервис, с помощью которого тащим пользователя
     private final SuccessUserHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
-    //@EnableAspectJAutoProxy(proxyTargetClass=true)
+
     public SecurityConfig( UserDetailsServiceImpl userDetails, SuccessUserHandler successUserHandler) {
         this.userDetails = userDetails;
         this.successUserHandler = successUserHandler;
     }
-/*
-    @Autowired
-    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService (userService).passwordEncoder (passwordEncoder ());
-        // auth.jdbcAuthentication ();
-      //  auth.jdbcAuthentication ().dataSource (dataSource);// конфигурация для прохождения аутентификации
-    }
- */
+
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
-        //auth.userDetailsService (userDetails);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests ().antMatchers ("/").permitAll ();
         http.formLogin ()
-               // .loginProcessingUrl("/autenticateTheUser")//.loginProcessingUrl("/autenticateTheUser")//
                 .successHandler (successUserHandler)
                 .permitAll ();
         http.logout ()//URL выхода из системы безопасности Spring - только POST. Вы можете поддержать выход из системы без POST, изменив конфигурацию Java

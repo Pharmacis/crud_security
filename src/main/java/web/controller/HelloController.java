@@ -23,17 +23,7 @@ public class HelloController {
     }
 
     @GetMapping("/")
-    public String getUsers(Model model){
-       // model.addAttribute("ROLES", userService.getRoles ());
-        model.addAttribute("ROLES", Arrays.asList("ROLE_USER", "ROLE_ADMIN"));
-        return "startPage";
-    }
-
-    @PostMapping("/")
-    public String getStartPage (Model model,@ModelAttribute("user") User user,@RequestParam List<String> rolesValues){
-        userService.add (user);
-        userService.addListOfRolesForUser (user,rolesValues);
-        model.addAttribute ("ROLES",userService.getRoles ());
+    public String getUsers(){
         return "startPage";
     }
 
@@ -41,9 +31,10 @@ public class HelloController {
     public String getAccessDenied(){
         return "accessDenied";
     }
+
     @GetMapping("/user")
     public String getUser(Model model){
-        model.addAttribute("user", (User) SecurityContextHolder
+        model.addAttribute("user",  SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal());

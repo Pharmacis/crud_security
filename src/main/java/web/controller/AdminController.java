@@ -12,7 +12,7 @@ import web.service.UserService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/**")
+@RequestMapping("/admin")
 public class AdminController {
     private UserService userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -26,7 +26,7 @@ public class AdminController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String getUsers(Model model){
         model.addAttribute ("list_users",userService.listUsers ());
         return "index";
@@ -35,12 +35,14 @@ public class AdminController {
     @GetMapping("/edit/{id}")
     public String getEditForm(@PathVariable("id") Long id, Model model){
         model.addAttribute ("user",userService.getUserById (id));
+        model.addAttribute ("ROLES",userService.getRoles ());
         return "edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String editUser (@ModelAttribute("user") User user){
-        userService.update (user);
+    public String editUser (@ModelAttribute("user") User user,@RequestParam List<String> rolesValues,Model model){
+        userService.update (user,rolesValues);
+        model.addAttribute ("ROLES", userService.getRoles ());
         return "redirect:/admin";
     }
 
@@ -52,8 +54,7 @@ public class AdminController {
 
     @PostMapping ("/add")
     public String addUser (Model model,@ModelAttribute("user") User user,@RequestParam List<String> rolesValues) {
-        userService.add (user);
-        userService.addListOfRolesForUser (user, rolesValues);
+        userService.add (user,rolesValues);
         model.addAttribute ("ROLES", userService.getRoles ());
         return "redirect:/admin";
     }

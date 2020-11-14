@@ -7,21 +7,21 @@ import java.util.List;
 
 public interface UserService  {
 
-    public void add(User user);
+     void add(User user,List<String> rolesValues);
 
-    public List<User> listUsers();
+     List<User> listUsers();
 
-    public void delete(User user);
+     void delete(User user);
 
-    public void deleteById(Long id);
+     void deleteById(Long id);
 
-    public User update(User user);
-    public boolean tableIsEmpty();
+     User update(User user,List<String> rolesValues);
+     boolean tableIsEmpty();
 
-    public User getUserById(Long id);
+     User getUserById(Long id);
 
-    public void addListOfRolesForUser(User user, List<String> rolesValues);
+     void addListOfRolesForUser(User user, List<String> rolesValues);
 
-    public List <String> getRoles();
+     List <String> getRoles();
 
 }

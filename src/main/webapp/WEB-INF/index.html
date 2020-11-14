@@ -5,10 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
+
 </head>
 <body>
 <h1>Users</h1>
-<table  width="30%" border="1" cellpadding="4" cellspacing="0">
+<table  width="30%" border="1" cellpadding="4" cellspacing="0"  >
 
     <tr>
         <th>id</th>
@@ -18,16 +19,16 @@
         <th>login</th>
         <th>roles</th>
         <th>link</th>
-    </tr>
-    <tr>
+    </tr >
+    <tr >
 
     <td>
-        <th:block th:each="lu : ${list_users}">
+        <th:block th:each="lu : ${list_users}" >
         <p th:text="${lu.getId()}"></p>
         </th:block>
 
     </td>
-        <td>
+        <td >
             <th:block th:each="lu : ${list_users}">
             <p th:text="${lu.getUserName()}"></p>
             </th:block>
@@ -56,7 +57,8 @@
         </td>
         <td>
             <th:block th:each="lu : ${list_users}">
-       <a th:href= "@{/admin/edit/{id}(id=${lu.getId()})}">edit</a>
+
+                <a th:href= "@{admin/edit/{id}(id=${lu.getId()})}">edit</a>
         <a th:href = "@{/admin/delete/{id}(id=${lu.getId()})}">delete</a>
                 <p></p>
             </th:block>
@@ -66,6 +68,10 @@
 
 <h1>Add</h1>
 <a th:href="@{/admin/add}">Add new user</a>
+
+<form th:align="left" th:action="@{/user}" method="get">
+    <input type="submit" value="Personal page"/>
+</form>
 <form th:align="left" th:action="@{/logout}" method="get">
     <input type="submit" value="Sign Out"/>
 </form>

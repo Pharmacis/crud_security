@@ -19,7 +19,6 @@ public class RoleDaoImp implements RoleDao {
     @Override
     public void addRole(Role role) {
         entityManager.persist (role);
-       // entityManager.refresh (role);
     }
 
     @Transactional
@@ -46,10 +45,7 @@ public class RoleDaoImp implements RoleDao {
     @Transactional
     @Override
     public List<String> getRoles() {
-        return (List <String>) entityManager.createQuery ("select role from Role ")
+        return  entityManager.createQuery ("select role from Role ")
                 .getResultList ();
-
     }
-
-
 }
