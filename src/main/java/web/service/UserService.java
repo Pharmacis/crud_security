@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService  {
 
-     void add(User user,List<String> rolesValues);
+     void addUserAndHisRoles(User user,List<String> rolesValues);
 
      List<User> listUsers();
 
@@ -15,7 +15,8 @@ public interface UserService  {
 
      void deleteById(Long id);
 
-     User update(User user,List<String> rolesValues);
+     User updateUserAndHisRoles(User user,List<String> rolesValues);
+
      boolean tableIsEmpty();
 
      User getUserById(Long id);
@@ -23,5 +24,9 @@ public interface UserService  {
      void addListOfRolesForUser(User user, List<String> rolesValues);
 
      List <String> getRoles();
+
+     List<User> listUsersWithRoles();
+
+     List<User> listUsersWithRoles2();
 
 }

@@ -4,31 +4,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import web.model.User;
 import web.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private UserService userService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-    @Autowired
-    public void setbCryptPasswordEncoder(BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     @GetMapping("")
     public String getUsers(Model model){
-        model.addAttribute ("list_users",userService.listUsers ());
+        model.addAttribute ("list_users",userService.listUsersWithRoles ());
+
         return "index";
     }
 
@@ -41,7 +39,7 @@ public class AdminController {
 
     @PostMapping("/edit/{id}")
     public String editUser (@ModelAttribute("user") User user,@RequestParam List<String> rolesValues,Model model){
-        userService.update (user,rolesValues);
+        userService.updateUserAndHisRoles (user,rolesValues);
         model.addAttribute ("ROLES", userService.getRoles ());
         return "redirect:/admin";
     }
@@ -53,10 +51,15 @@ public class AdminController {
     }
 
     @PostMapping ("/add")
-    public String addUser (Model model,@ModelAttribute("user") User user,@RequestParam List<String> rolesValues) {
-        userService.add (user,rolesValues);
-        model.addAttribute ("ROLES", userService.getRoles ());
-        return "redirect:/admin";
+    public String addUser (Model model, @ModelAttribute("user")@Valid User user, BindingResult bindingResult,
+                           @RequestParam List<String> rolesValues) {
+        if(bindingResult.hasErrors ()){
+            return "/add";
+        } else {
+            userService.addUserAndHisRoles (user, rolesValues);
+            model.addAttribute ("ROLES", userService.getRoles ());
+            return "redirect:/admin";
+        }
     }
 
     @GetMapping("/delete/{id}")

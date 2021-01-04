@@ -1,6 +1,8 @@
 package web.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,11 +15,13 @@ import web.dao.UserDao;
 import web.model.Role;
 import web.model.User;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service()
+@Transactional
 public class UserServiceImp implements UserService {
 
     private UserDao userDao;
@@ -42,7 +46,7 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void add (User user,List<String> rolesValues){
+    public void addUserAndHisRoles (User user,List<String> rolesValues){
         user.setPassword (bCryptPasswordEncoder.encode (user.getPassword ()));
         addListOfRolesForUser (user,rolesValues);
         userDao.add (user);
@@ -61,61 +65,76 @@ public class UserServiceImp implements UserService {
                    roleDao.addRole(newRole);
                    roles.add(newRole);
                }
-
         }
         user.setRoles(roles);
-       // user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     }
- @Transactional
+
+    @Transactional
     @Override
     public List<String> getRoles() {
         return roleDao.getRoles ();
     }
 
-    // @Transactional(readOnly = true)
     @Transactional
-        @Override
-        public List<User> listUsers () {
+    @Override
+    public List<User> listUsersWithRoles() {
+        return userDao.listUsersWithRoles ();
+    }
+
+    @Transactional
+    @Override
+    public List<User> listUsers () {
             return userDao.listUsers ();
         }
 
+    @Transactional
+    @Override
+    public void delete (User user){
+        userDao.delete (user);
+    }
 
-        @Transactional
-        @Override
-        public void delete (User user){
-            userDao.delete (user);
+    @Transactional
+    @Override
+    public void deleteById(Long id) {
+        userDao.deleteById (id);
+    }
+
+
+    @Transactional
+    @Override
+    public User updateUserAndHisRoles(User user, List<String> rolesValues) {
+        addListOfRolesForUser (user, rolesValues);
+        user.setPassword (bCryptPasswordEncoder.encode (user.getPassword ()));
+        return userDao.update (user);
+    }
+
+    @Transactional
+    @Override
+    public boolean tableIsEmpty() {
+        try {
+            userDao.tableIsEmpty ();
+        } catch (java.lang.NullPointerException e) {
+            return false;
         }
+        return true;
+    }
 
+    @Transactional
+    @Override
+    public User getUserById(Long id) {
+        return userDao.getUserById (id);
+    }
 
-        @Transactional
-        @Override
-        public void deleteById (Long id){
-            userDao.deleteById (id);
-        }
-
-
-        @Transactional
-        @Override
-        public User update (User user,List<String> rolesValues){
-            addListOfRolesForUser (user,rolesValues);
-            return userDao.update (user);
-        }
-        @Transactional
-        @Override
-        public boolean tableIsEmpty () {
-            try {
-                userDao.tableIsEmpty ();
-            } catch (java.lang.NullPointerException e) {
-                return false;
+    @Transactional
+    @Override
+    public List<User> listUsersWithRoles2() {
+        List<User> users = userDao.listUsers ();
+        for (User user : users) {
+            if (user.getRoles ().iterator ().hasNext ()) {
+                user.getRoles ().iterator ().next ();
             }
-            return true;
         }
+        return users;
+    }
 
-
-
-        @Transactional
-        @Override
-        public User getUserById (Long id){
-            return userDao.getUserById (id);
-        }
 }

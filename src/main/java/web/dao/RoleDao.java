@@ -10,6 +10,7 @@ public interface RoleDao {
     Role update(Role role);
     Long countRoles(String name);
     List<String> getRoles();
+    List <Role> listRolesByUser(Long userId);
 
 
 

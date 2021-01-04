@@ -3,6 +3,7 @@ package web.dao;
 import web.model.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserDao {
 
@@ -11,6 +12,10 @@ public interface UserDao {
    public void add(User user);
 
    public List<User> listUsers();
+
+   List<User> listUsersWithRoles();
+
+   public Set<User> setUsers();
 
    public void delete(User user);
 

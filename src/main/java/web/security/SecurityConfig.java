@@ -33,24 +33,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests ().antMatchers ("/").permitAll ();
         http.formLogin ()
-                .successHandler (successUserHandler)
-                .permitAll ();
-        http.logout ()//URL выхода из системы безопасности Spring - только POST. Вы можете поддержать выход из системы без POST, изменив конфигурацию Java
+                .successHandler (successUserHandler);
+                //.permitAll ();
+
+        http.logout ()//URL выходча из системы безопасности Spring - только POST. Вы можете поддержать выход из системы без POST, изменив конфигурацию Java
                 .logoutRequestMatcher (new AntPathRequestMatcher ("/logout"))//выход из системы гет запрос на /logout
                 .logoutSuccessUrl ("/login")//успешный выход из системы
                 .and().csrf().disable();
 
-        http
+       // http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
-                .authorizeRequests()
+                //.authorizeRequests()
                 //страницы аутентификаци доступна всем
-                .antMatchers("/login").anonymous()
+               // .antMatchers("/login").anonymous()
                 // защищенные URL
-                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/user").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-                .anyRequest().authenticated()
-                .and().formLogin()// Spring сам подставит свою логин форму
-                .successHandler(successUserHandler);
+              //  .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                //.antMatchers("/user").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+               // .anyRequest().authenticated();
+               // .and().formLogin()// Spring сам подставит свою логин форму
+              //  .successHandler(successUserHandler);
 
 
     }

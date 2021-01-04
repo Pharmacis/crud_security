@@ -8,44 +8,52 @@ import web.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Repository
+@Transactional
 public class RoleDaoImp implements RoleDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional
     @Override
     public void addRole(Role role) {
         entityManager.persist (role);
     }
 
-    @Transactional
     @Override
     public Role getRoleByName(String name) {
-        return (Role) entityManager.createQuery("from Role where role =:name")
-                .setParameter("name", name)
-                .getSingleResult();
+        return (Role) entityManager.createQuery ("from Role where role =:name")
+                .setParameter ("name", name)
+                .getSingleResult ();
     }
 
-    @Transactional
     @Override
     public Role update(Role role) {
-        return entityManager.merge(role);
+        return entityManager.merge (role);
     }
 
     @Override
     public Long countRoles(String name) {
         return (Long) entityManager.createQuery ("SELECT count (*) from Role where role=:name")
-                .setParameter ("name",name)
+                .setParameter ("name", name)
                 .getSingleResult ();
     }
 
-    @Transactional
     @Override
     public List<String> getRoles() {
-        return  entityManager.createQuery ("select role from Role ")
+        return entityManager.createQuery ("select role from Role ")
                 .getResultList ();
+    }
+
+    public List<Role> listRolesByUser(Long userId) {
+        List<Role> roles = new ArrayList<> ();
+        roles = entityManager.createQuery ("select u.roles from User u where u.id = :userId")
+                .setParameter ("userId", userId)
+                .getResultList ();
+        return roles;
+
     }
 }

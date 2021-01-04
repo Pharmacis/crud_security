@@ -1,5 +1,6 @@
 package web.dao;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,78 +9,82 @@ import web.model.User;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Repository
+@Transactional
 public class UserDaoImp implements UserDao {
    @PersistenceContext
    private EntityManager entityManager;
 
-   @Transactional
    @Override
    public User getUserByLogin(String login) {
-     return (User) entityManager.createQuery("from User where login =:login")
-              .setParameter("login", login)
-              .getSingleResult();
+      User user = new User ();
+      user = (User) entityManager.createQuery ("from User where login =:login")
+              .setParameter ("login", login)
+              .getSingleResult ();
+
+      return user;
    }
 
-   @Transactional
    @Override
    public void add(User user) {
       entityManager.persist (user);
    }
 
-   @Transactional
    @Override
    @SuppressWarnings("unchecked")
    public List<User> listUsers() {
-     return entityManager.createQuery (" from User ", User.class).getResultList ();
-
+      return entityManager.createQuery (" from User ", User.class).getResultList ();
    }
 
-   @Transactional
+   @Override
+   public List<User> listUsersWithRoles() {
+      return entityManager.createQuery ("select distinct u from User u   join fetch u.roles ").getResultList ();
+   }
+
+   @Override
+   public Set<User> setUsers() {
+      return null;
+   }
+
+
    @Override
    public void delete(User user) {
-     entityManager.remove (entityManager.createQuery(" from User where id =:id")
-              .setParameter("id", user.getId ())
-              .getSingleResult());
-
+      entityManager.remove (user);
    }
 
-   @Transactional
    @Override
    public void deleteById(Long id) {
-      entityManager.remove(entityManager.createQuery("from User where id =:id")
-              .setParameter("id", id)
-              .getSingleResult());
+      entityManager.remove (getUserById (id));
    }
 
-   @Transactional
    @Override
    public User update(User user) {
-      return entityManager.merge(user);
+      return entityManager.merge (user);
    }
 
-   @Transactional
    @Override
    public User getUserById(Long id) {
-      return (User) entityManager.createQuery("from User where id =:longID")
-              .setParameter("longID", id)
-              .getSingleResult();
-   }
-   @Transactional
-   @Override
-   public boolean tableIsEmpty() {
-        return entityManager.createQuery ("select 1 from user")
-                 .getResultList ()
-                 .isEmpty ();
+      return (User) entityManager.createQuery ("from User where id =:longID")
+              .setParameter ("longID", id)
+              .getSingleResult ();
    }
 
-   @Transactional
+   @Override
+   public boolean tableIsEmpty() {
+      return entityManager.createQuery ("select 1 from user")
+              .getResultList ()
+              .isEmpty ();
+   }
+
    @Override
    public User getUserByName(String name) {
-      return (User) entityManager.createQuery("from User where userName =:name")
-              .setParameter("name", name)
-              .getSingleResult();
+      return (User) entityManager.createQuery ("from User where userName =:name")
+              .setParameter ("name", name)
+              .getSingleResult ();
    }
+
 }

@@ -1,9 +1,18 @@
 package web.model;
 
+import com.sun.istack.internal.NotNull;
+import org.hibernate.Hibernate;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
+
+import web.service.UserService;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,20 +30,23 @@ public class User implements UserDetails {
     private String login;
 
     @Column
+    @NotEmpty(message = "This field should not be empty")
     private String userName;
 
     @Column
     private String profession;
 
     @Column
+    @Min (value = 0, message = "Invalid value")
+    @Max (value =120)
     private int age;
 
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST,CascadeType.DETACH, CascadeType.MERGE,CascadeType.REFRESH})
-    private Set<Role> roles= new HashSet<> ();
+    @ManyToMany(fetch = FetchType.LAZY,
+          cascade = {CascadeType.PERSIST,CascadeType.DETACH, CascadeType.MERGE,CascadeType.REFRESH})
+    private Set<Role> roles;
 
     public User() {
     }
@@ -60,7 +72,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+       return getRoles ();
     }
 
     @Override

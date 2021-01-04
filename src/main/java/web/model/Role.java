@@ -1,5 +1,8 @@
 package web.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -10,6 +13,7 @@ import java.util.Set;
 
 // Этот класс реализует интерфейс GrantedAuthority, в котором необходимо переопределить только один метод getAuthority() (возвращает имя роли).
 // Имя роли должно соответствовать шаблону: «ROLE_ИМЯ», например, ROLE_USER.
+
 @Entity
 @Table
 public class Role implements GrantedAuthority {
@@ -21,8 +25,8 @@ public class Role implements GrantedAuthority {
     private String role;
 
    @Transient
-   @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    private Set<User> users = new HashSet<User>();
+   @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private Set<User> users;
 
     public Role(Long id, String role) {
         this.id = id;

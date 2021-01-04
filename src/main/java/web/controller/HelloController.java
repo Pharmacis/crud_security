@@ -1,6 +1,8 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +25,13 @@ public class HelloController {
     }
 
     @GetMapping("/")
-    public String getUsers(){
+    public String getUsers(Model model){
+        model.addAttribute ("list_users",userService.listUsersWithRoles ());
         return "startPage";
     }
 
     @GetMapping("/access-denied")
+    @Secured ("ROLE_ADMIN")
     public String getAccessDenied(){
         return "accessDenied";
     }
