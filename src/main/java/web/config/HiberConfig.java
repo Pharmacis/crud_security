@@ -16,6 +16,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.sql.Driver;
+import java.util.Enumeration;
 import java.util.Properties;
 
 
@@ -36,7 +38,6 @@ public class HiberConfig {
 
    @Bean
    public  DataSource getDataSource() {
-      //BasicDataSource dataSource = new BasicDataSource ();
       DriverManagerDataSource dataSource = new DriverManagerDataSource ();
       dataSource.setDriverClassName(env.getProperty("db.driver"));
       dataSource.setUrl(env.getProperty("db.url"));
@@ -49,14 +50,10 @@ public class HiberConfig {
    public LocalContainerEntityManagerFactoryBean getSessionFactory() {
       LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean ();
       factoryBean.setDataSource(getDataSource());
-      
       Properties props=new Properties();
       props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
       props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-     // props.put("hibernate.dialect",env.getProperty ("hibernate.dialect"));
-
       factoryBean.setPackagesToScan("web/model");
-
       JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter ();
       factoryBean.setJpaVendorAdapter(vendorAdapter);
       factoryBean.setJpaProperties (props);

@@ -1,24 +1,15 @@
 package web.model;
-
-import com.sun.istack.internal.NotNull;
-import org.hibernate.Hibernate;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
-
-import web.service.UserService;
-
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(name = "user_cs")
 public class User implements UserDetails {
 
     @Id
@@ -30,7 +21,6 @@ public class User implements UserDetails {
     private String login;
 
     @Column
-    @NotEmpty(message = "This field should not be empty")
     private String userName;
 
     @Column
@@ -68,6 +58,24 @@ public class User implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getAge () == user.getAge () &&
+                getId ().equals (user.getId ()) &&
+                Objects.equals (getLogin (), user.getLogin ()) &&
+                Objects.equals (getUserName (), user.getUserName ()) &&
+                Objects.equals (getProfession (), user.getProfession ()) &&
+                Objects.equals (getPassword (), user.getPassword ());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash (getId (), getLogin (), getUserName (), getProfession (), getAge (), getPassword ());
     }
 
     @Override
@@ -157,7 +165,7 @@ public class User implements UserDetails {
                 ", userName='" + userName + '\'' +
                 ", profession='" + profession + '\'' +
                 ", age=" + age +
-                ", roles=" + roles +
+                ", roles=" + roles.toArray ().length +
                 '}';
     }
 }

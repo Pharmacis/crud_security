@@ -20,13 +20,10 @@ public class UserDaoImp implements UserDao {
    private EntityManager entityManager;
 
    @Override
-   public User getUserByLogin(String login) {
-      User user = new User ();
-      user = (User) entityManager.createQuery ("from User where login =:login")
+   public User getUserWithRoles(String login) {
+      return (User) entityManager.createQuery ("select distinct u from User u   join fetch u.roles where u.login = :login ")
               .setParameter ("login", login)
               .getSingleResult ();
-
-      return user;
    }
 
    @Override
@@ -35,25 +32,8 @@ public class UserDaoImp implements UserDao {
    }
 
    @Override
-   @SuppressWarnings("unchecked")
-   public List<User> listUsers() {
-      return entityManager.createQuery (" from User ", User.class).getResultList ();
-   }
-
-   @Override
    public List<User> listUsersWithRoles() {
       return entityManager.createQuery ("select distinct u from User u   join fetch u.roles ").getResultList ();
-   }
-
-   @Override
-   public Set<User> setUsers() {
-      return null;
-   }
-
-
-   @Override
-   public void delete(User user) {
-      entityManager.remove (user);
    }
 
    @Override
@@ -68,23 +48,6 @@ public class UserDaoImp implements UserDao {
 
    @Override
    public User getUserById(Long id) {
-      return (User) entityManager.createQuery ("from User where id =:longID")
-              .setParameter ("longID", id)
-              .getSingleResult ();
+      return entityManager.find (User.class, id);
    }
-
-   @Override
-   public boolean tableIsEmpty() {
-      return entityManager.createQuery ("select 1 from user")
-              .getResultList ()
-              .isEmpty ();
-   }
-
-   @Override
-   public User getUserByName(String name) {
-      return (User) entityManager.createQuery ("from User where userName =:name")
-              .setParameter ("name", name)
-              .getSingleResult ();
-   }
-
 }

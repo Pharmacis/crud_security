@@ -9,6 +9,7 @@ import web.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,24 +37,16 @@ public class RoleDaoImp implements RoleDao {
     }
 
     @Override
-    public Long countRoles(String name) {
-        return (Long) entityManager.createQuery ("SELECT count (*) from Role where role=:name")
-                .setParameter ("name", name)
-                .getSingleResult ();
-    }
-
-    @Override
     public List<String> getRoles() {
         return entityManager.createQuery ("select role from Role ")
                 .getResultList ();
     }
-
-    public List<Role> listRolesByUser(Long userId) {
-        List<Role> roles = new ArrayList<> ();
-        roles = entityManager.createQuery ("select u.roles from User u where u.id = :userId")
-                .setParameter ("userId", userId)
-                .getResultList ();
-        return roles;
-
+    @Override
+    public void setRoleByListNameRole(User user,List <String>role){
+        Set <Role> roles = new HashSet<>();
+        for (String name: role){
+            roles.add(getRoleByName (name));
+        }
+        user.setRoles (roles);
     }
 }

@@ -1,15 +1,12 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import web.model.User;
 import web.service.UserService;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -26,7 +23,6 @@ public class AdminController {
     @GetMapping("")
     public String getUsers(Model model){
         model.addAttribute ("list_users",userService.listUsersWithRoles ());
-
         return "index";
     }
 
@@ -38,9 +34,8 @@ public class AdminController {
     }
 
     @PostMapping("/edit/{id}")
-    public String editUser (@ModelAttribute("user") User user,@RequestParam List<String> rolesValues,Model model){
+    public String editUser (@ModelAttribute("user") User user,@RequestParam List<String>rolesValues, Model model){
         userService.updateUserAndHisRoles (user,rolesValues);
-        model.addAttribute ("ROLES", userService.getRoles ());
         return "redirect:/admin";
     }
 
@@ -56,8 +51,7 @@ public class AdminController {
         if(bindingResult.hasErrors ()){
             return "/add";
         } else {
-            userService.addUserAndHisRoles (user, rolesValues);
-            model.addAttribute ("ROLES", userService.getRoles ());
+            userService.addUserWithRoles (user, rolesValues);
             return "redirect:/admin";
         }
     }
