@@ -10,7 +10,7 @@ public interface RoleDao {
     Role getRoleByName(String name);
     Role update(Role role);
     List<String> getRoles();
-    void setRoleByListNameRole(User user, List <String>role);
+
 
 
 

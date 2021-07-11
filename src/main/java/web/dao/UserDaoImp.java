@@ -9,12 +9,9 @@ import web.model.User;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Repository
-@Transactional
 public class UserDaoImp implements UserDao {
    @PersistenceContext
    private EntityManager entityManager;
@@ -33,7 +30,16 @@ public class UserDaoImp implements UserDao {
 
    @Override
    public List<User> listUsersWithRoles() {
-      return entityManager.createQuery ("select distinct u from User u   join fetch u.roles ").getResultList ();
+       return entityManager.createQuery ("select distinct u from User u   join fetch u.roles ").getResultList ();
+   }
+
+   @Override
+   public void setRoleByListNameRole(User user, List<String> role) {
+       List<Role> roleList = (List<Role>) entityManager.createQuery ("select r from Role r where r.role in (:list)")
+              .setParameter ("list", role)
+              .getResultList ();
+       Set<Role> roles = new HashSet<> (roleList);
+       user.setRoles (roles);
    }
 
    @Override

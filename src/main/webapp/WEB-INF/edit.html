@@ -9,17 +9,17 @@
 <a th:href="@{/login}">Log in</a>
     <form  method="post" modelAttribute = "user">
         <label>UserName</label>
-        <input type="text" name="UserName"    />
+        <input type="text" name="UserName" th:value="${user.getUserName()}"   />
         <label>Profession</label>
-        <input type="text" name ="Profession"  />
+        <input type="text" name ="Profession" th:value="${user.getProfession()}" />
         <label>Age</label>
-        <input type="number" name = "Age"/>
+        <input type="number" name = "Age" th:value="${user.getAge()}" />
         <label>Login</label>
-        <input type="text" name="Login"    />
+        <input type="text" name="Login"th:value="${user.getLogin()}"     />
         <label>Password</label>
-        <input type="text" name="Password"    />
+        <input type="password" name="Password" value="San"    />
         <li th:each="role : ${ROLES}">
-            <input type="checkbox" name="rolesValues" th:value="${role}"/>
+            <input type="checkbox" name="rolesValues"  th:value="${role}"/>
             <label th:text="${role}"></label>
         </li>
     <input type="submit" value="Edit user">

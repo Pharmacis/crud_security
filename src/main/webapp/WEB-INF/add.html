@@ -12,7 +12,6 @@
 <form  method="post" modelAttribute = "user">
     <label>UserName</label>
     <input type="text" name="UserName"/>
-    <br/>
     <label>Profession</label>
     <input type="text" name ="Profession"  />
     <label>Age</label>
@@ -20,7 +19,7 @@
     <label>Login</label>
     <input type="text" name="Login"    />
     <label>Password</label>
-    <input type="text" name="Password"    />
+    <input type="password" name="Password"    />
     <li th:each="role : ${ROLES}">
         <input type="checkbox" name="rolesValues" th:value="${role}"/>
         <label th:text="${role}"></label>

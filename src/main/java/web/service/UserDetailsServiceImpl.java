@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private RoleDao roleDao;
 
     @Autowired
-   void setUserDao(UserDao userDao){
+    void setUserDao(UserDao userDao){
         this.userDao = userDao;
     }
     @Autowired

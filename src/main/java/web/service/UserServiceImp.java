@@ -64,7 +64,7 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public User updateUserAndHisRoles(User user, List<String> rolesValues) {
-        roleDao.setRoleByListNameRole (user,rolesValues);
+        userDao.setRoleByListNameRole (user,rolesValues);
         user.setPassword (bCryptPasswordEncoder.encode (user.getPassword ()));
         return userDao.update (user);
     }
@@ -79,7 +79,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User addUserWithRoles(User user, List<String> roles) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        roleDao.setRoleByListNameRole (user,roles);
+        userDao.setRoleByListNameRole (user,roles);
         userDao.add (user);
         return user;
     }

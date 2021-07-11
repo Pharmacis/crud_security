@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-@Transactional
 public class RoleDaoImp implements RoleDao {
     @PersistenceContext
     private EntityManager entityManager;
@@ -41,12 +40,5 @@ public class RoleDaoImp implements RoleDao {
         return entityManager.createQuery ("select role from Role ")
                 .getResultList ();
     }
-    @Override
-    public void setRoleByListNameRole(User user,List <String>role){
-        Set <Role> roles = new HashSet<>();
-        for (String name: role){
-            roles.add(getRoleByName (name));
-        }
-        user.setRoles (roles);
-    }
+
 }

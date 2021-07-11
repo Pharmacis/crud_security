@@ -12,6 +12,7 @@ public interface UserDao {
    public void deleteById(Long id);
    public User update(User user);
    public User getUserById(Long id);
+   public void setRoleByListNameRole(User user,List <String>role);
 }
 
 
